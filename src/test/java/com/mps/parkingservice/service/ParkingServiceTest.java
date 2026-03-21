@@ -139,6 +139,56 @@ class ParkingServiceTest {
             assertThrows(VehicleAlreadyParkedException.class,
                 () -> parkingService.parkVehicle(duplicateDto));
         }
+
+        @Test
+        void shouldSkipInactiveSlotWhenParkingVehicle() {
+            //given
+            List<ParkingSlot> slots = createAndOccupyParkingSlots(2);
+            ParkingService parkingService = new ParkingService(priceCalculationService, slots, vehicleMapper);
+            VehicleDto vehicle = new VehicleDto(VEHICLE_REG_OTHER, VEHICLE_TYPE_SMALL);
+
+            parkingService.setSlotActiveStatus(3, false);
+
+            //when
+            ParkingInfoDto result = parkingService.parkVehicle(vehicle);
+
+            //then
+            assertEquals(4, result.spaceNumber());
+        }
+    }
+
+    @Nested
+    class SetSlotActiveStatus {
+
+        @Test
+        void shouldDeactivateAndActivateExistingSlot() {
+            //given
+            List<ParkingSlot> slots = createParkingSlots();
+            ParkingService parkingService = new ParkingService(priceCalculationService, slots, vehicleMapper);
+
+            //when
+            parkingService.setSlotActiveStatus(2, false);
+
+            //then
+            assertTrue(slots.get(3).tryIsActive());
+
+            //when
+            parkingService.setSlotActiveStatus(2, true);
+
+            //then
+            assertTrue(slots.get(3).tryIsActive());
+        }
+
+        @Test
+        void shouldThrowResourceNotFoundExceptionWhenSlotDoesNotExist() {
+            //GIVEN
+            List<ParkingSlot> slots = createParkingSlots();
+            ParkingService parkingService = new ParkingService(priceCalculationService, slots, vehicleMapper);
+
+            //THEN
+            assertThrows(ResourceNotFoundException.class,
+                () -> parkingService.setSlotActiveStatus(TOTAL_SLOTS + 1, false));
+        }
     }
 
     @Nested

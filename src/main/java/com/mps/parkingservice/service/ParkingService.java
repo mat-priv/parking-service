@@ -35,7 +35,7 @@ public class ParkingService {
             .filter(ParkingSlot::tryIsOccupied)
             .count();
         int availableSpaces = (int) parkingSlots.stream()
-            .filter(ps -> !ps.tryIsOccupied())
+            .filter(ps -> ps.tryIsActive() && !ps.tryIsOccupied())
             .count();
 
         return new SpaceDto(availableSpaces, occupiedSpaces);
@@ -72,6 +72,15 @@ public class ParkingService {
 
         parkingSlot.tryRemoveVehicle();
         return billingResponseDto;
+    }
+
+    public void setSlotActiveStatus(int slotNumber, boolean active) {
+        ParkingSlot slot = parkingSlots.stream()
+            .filter(ps -> ps.getSlotNumber() == slotNumber)
+            .findFirst()
+            .orElseThrow(() -> new ResourceNotFoundException("ParkingSlot", "slotNumber", String.valueOf(slotNumber)));
+        slot.trySetActive(active);
+        log.info("Slot {} active status set to {}", slotNumber, active);
     }
 
     private static int calculateParkingTime(ParkingSlot parkingSlot, LocalDateTime currentTime) {

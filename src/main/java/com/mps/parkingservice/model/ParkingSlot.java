@@ -15,6 +15,8 @@ public class ParkingSlot {
 
     private boolean occupied;
 
+    private boolean active = true;
+
     private Vehicle vehicle;
 
     private LocalDateTime timeIn;
@@ -27,6 +29,24 @@ public class ParkingSlot {
         lock.lock();
         try {
             return occupied;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean tryIsActive() {
+        lock.lock();
+        try {
+            return active;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void trySetActive(boolean active) {
+        lock.lock();
+        try {
+            this.active = active;
         } finally {
             lock.unlock();
         }
@@ -64,7 +84,7 @@ public class ParkingSlot {
     public boolean tryParkVehicle(Vehicle vehicle) {
         lock.lock();
         try {
-            if (occupied) {
+            if (occupied || !active) {
                 return false;
             } else {
                 occupied = true;
