@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: parking-service
+
+app:
+  parking:
+    capacity: 100
+    extra-charge-amount-gbp: 1
+    extra-charge-time-min: 5
+    rate-type1: 0.1
+    rate-type2: 0.2
+    rate-type3: 0.4
