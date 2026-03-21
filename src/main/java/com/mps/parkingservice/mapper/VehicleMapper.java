@@ -10,4 +10,6 @@ public interface VehicleMapper {
 
     Vehicle toModel(VehicleDto vehicleDto);
 
+    VehicleDto toDto(Vehicle vehicle);
+
 }

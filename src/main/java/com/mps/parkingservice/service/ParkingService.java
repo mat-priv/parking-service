@@ -37,8 +37,12 @@ public class ParkingService {
         int availableSpaces = (int) parkingSlots.stream()
             .filter(ps -> ps.tryIsActive() && !ps.tryIsOccupied())
             .count();
+        List<Integer> inactiveSlotNumbers = parkingSlots.stream()
+            .filter(ps -> !ps.tryIsActive())
+            .map(ParkingSlot::getSlotNumber)
+            .toList();
 
-        return new SpaceDto(availableSpaces, occupiedSpaces);
+        return new SpaceDto(parkingSlots.size(), availableSpaces, occupiedSpaces, inactiveSlotNumbers);
     }
 
     public ParkingInfoDto parkVehicle(VehicleDto vehicleDto) {
@@ -81,6 +85,18 @@ public class ParkingService {
             .orElseThrow(() -> new ResourceNotFoundException("ParkingSlot", "slotNumber", String.valueOf(slotNumber)));
         slot.trySetActive(active);
         log.info("Slot {} active status set to {}", slotNumber, active);
+    }
+
+    public List<OccupiedSlotsDto> getOccupiedSlotsInfo() {
+        log.info("Retrieving occupied parking slots info.");
+        return parkingSlots.stream()
+            .filter(ParkingSlot::tryIsOccupied)
+            .map(ps -> new OccupiedSlotsDto(
+                ps.getSlotNumber(),
+                vehicleMapper.toDto(ps.tryGetVehicle()),
+                ps.tryGetTimeIn(),
+                priceCalculationService.calculatePrice(calculateParkingTime(ps, LocalDateTime.now()), ps.tryGetVehicle().vehicleType())))
+            .toList();
     }
 
     private static int calculateParkingTime(ParkingSlot parkingSlot, LocalDateTime currentTime) {

@@ -1,4 +1,6 @@
 package com.mps.parkingservice.dto;
 
-public record SpaceDto(int availableSpaces, int occupiedSpaces) {
+import java.util.List;
+
+public record SpaceDto(int totalSlots, int availableSpaces, int occupiedSpaces, List<Integer> inactiveSlotNumbers) {
 }

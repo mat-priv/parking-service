@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Slf4j
 @RestController
@@ -32,6 +34,15 @@ public class ParkingController {
         SpaceDto spaceInfo = parkingService.getSpaceInfo();
         log.info("Retrieved parking space info: {}", spaceInfo);
         return ResponseEntity.ok(spaceInfo);
+    }
+
+    @Operation(summary = "Get occupied parking slots information",
+        description = "Get detailed information about occupied parking slots, including slot number, " +
+            "vehicle details, time of parking, and current parking charge")
+    @GetMapping("/occupied")
+    public ResponseEntity<List<OccupiedSlotsDto>> getOccupiedSpacesInfo() {
+        log.info("Retrieving occupied parking slots information.");
+        return ResponseEntity.ok(parkingService.getOccupiedSlotsInfo());
     }
 
     @Operation(summary = "Park a vehicle in the first available parking lot",

@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -35,6 +36,7 @@ class ParkingControllerTest {
 
     private static final int AVAILABLE_SPACES = 100;
     private static final int OCCUPIED_SPACES = 20;
+    private static final int TOTAL_SLOTS = 120;
 
     @Mock
     private ParkingService parkingService;
@@ -62,12 +64,13 @@ class ParkingControllerTest {
         @DisplayName("Returns number of available and full parking spaces in the parking")
         void return200WithParkingSpotsInfo() throws Exception {
             //Given
-            SpaceDto spaceInfo = new SpaceDto(AVAILABLE_SPACES, OCCUPIED_SPACES);
+            SpaceDto spaceInfo = new SpaceDto(TOTAL_SLOTS, AVAILABLE_SPACES, OCCUPIED_SPACES, List.of());
             //WHEN
             when(parkingService.getSpaceInfo()).thenReturn(spaceInfo);
             //THEN
             mockMvc.perform(get("/tds-parking/parking"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalSlots").value(TOTAL_SLOTS))
                 .andExpect(jsonPath("$.availableSpaces").value(AVAILABLE_SPACES))
                 .andExpect(jsonPath("$.occupiedSpaces").value(OCCUPIED_SPACES));
         }
