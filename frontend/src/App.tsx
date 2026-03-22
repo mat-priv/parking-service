@@ -444,10 +444,6 @@ function App() {
           <div className="stack">
             <div className="bulk-parking-box">
               <div className="bulk-parking-header">
-                <div>
-                  <p className="panel-kicker">Bulk test action</p>
-                  <h3>Park generated test cars</h3>
-                </div>
                 {spaceInfo ? <span className="chip chip-muted">{spaceInfo.availableSpaces} free now</span> : null}
               </div>
 
