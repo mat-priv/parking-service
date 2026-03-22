@@ -31,6 +31,7 @@ npm run build
 docker build -t parking-frontend-local -f Dockerfile .
 docker run --rm -p 5173:80 parking-frontend-local
 ```
+3. Open Frontend: `http://localhost:5173`
 
 ## Run Both (Frontend + Backend)
 1. Go to the project root directory.
@@ -44,3 +45,4 @@ npm run build
 cd ..
 docker-compose up --build
 ```
+3. Open Frontend: `http://localhost:5173`
