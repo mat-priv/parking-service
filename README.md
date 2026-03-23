@@ -22,7 +22,16 @@ docker run --rm -p 8080:8080 parking-backend-local
 
 3. Open Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 
-## Run Frontend
+## Run Frontend (Vite)
+1. Go to the project root directory, then `frontend` directory.
+2. Run:
+
+```bash
+npm run dev
+```
+3. Open Frontend: `http://localhost:5173`
+
+## Run Frontend (Docker)
 1. Go to the project root directory, then `frontend` directory.
 2. Run:
 
@@ -33,7 +42,7 @@ docker run --rm -p 5173:80 parking-frontend-local
 ```
 3. Open Frontend: `http://localhost:5173`
 
-## Run Both (Frontend + Backend)
+## Run Both (Frontend + Backend) in Docker
 1. Go to the project root directory.
 2. Run:
 

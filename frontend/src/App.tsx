@@ -639,8 +639,12 @@ function App() {
                     step="1"
                     value={configForm.capacity}
                     onChange={(e) => setConfigForm((f) => ({ ...f, capacity: Number(e.target.value) }))}
-                    disabled={configSubmitting}
+                    disabled={configSubmitting || occupiedSlots.length > 0}
+                    title={occupiedSlots.length > 0 ? 'Capacity can be changed only when the parking is empty' : undefined}
                   />
+                  {occupiedSlots.length > 0 ? (
+                    <span className="helper-text" style={{ color: '#fbbf24' }}>Capacity can be changed only when the parking is empty.</span>
+                  ) : null}
                 </label>
 
                 <label className="field">
